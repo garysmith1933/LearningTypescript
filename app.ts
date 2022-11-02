@@ -22,6 +22,12 @@ type Numeric = number | boolean;
 
 type Universal = Combinable & Numeric;
 
+//Function Overloads
+//if both parameters are a function return a number
+function add1(a:number, b:number): number
+//if both are strings, return a string
+function add1(a:string, b:string): string
+
 function add1(a:Combinable, b: Combinable) {
   if(typeof a === 'string' || typeof b === 'string') {
     return a.toString() + b.toString();
@@ -29,6 +35,26 @@ function add1(a:Combinable, b: Combinable) {
   return a + b
 }
 
+const result = add1('Max', 'Schwartz')
+result.split(' ')
+
+const fetchedUserData = {
+  id: 'u1',
+  name: 'Max',
+  job: { title: 'CEO', description: 'My own Company'}
+}
+
+//optional chaining
+console.log(fetchedUserData?.job?.title)
+
+//Nullish Coalescing
+const userInput = undefined;
+
+//if userInput is null or undefined, use default
+const storedData = userInput ?? 'DEFAULT';
+
+console.log(storedData)
+ 
 type UnknownEmployee = Employee | Admin;
 
 function printEmployeeInformation(emp: UnknownEmployee) {
@@ -119,3 +145,17 @@ const userInputElement = <HTMLInputElement>document.getElementById('user-input')
 if(userInputElement){
   (userInputElement as HTMLInputElement).value = 'Hi there!'
 }
+
+//Index Properties 
+
+interface ErrorContainer { // { email: 'Not valid email', username: 'must start with a character'}
+  //We dont know the name, nor how many there are. We just know it has to be a string, with a value that is also a string.
+  [prop: string]: string
+}
+
+const errorBag: ErrorContainer = {
+  //can also be a number since it can be converted to a string, but not vice versa.
+  email: 'Not a valid email',
+  username: 'Must start with a capital character!'
+}
+
