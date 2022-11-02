@@ -1,52 +1,76 @@
-// type AddFn = (a: number, b: number) => number; - MORE COMMON
+type Admin = {
+    name:string;
+    privileges: string[];
+};
 
-
-interface AddFn {
-    (a:number, b:number): number;
+type Employee = {
+    name:string;
+    startDate: Date;
 }
 
-let add: AddFn;
+//interface ElevatedEmployee extends Employee, Admin
+type ElevatedEmployee = Admin & Employee
 
-add = (n1: number, n2:number) => {
-    return n1 + n2;
+const e1: ElevatedEmployee = {
+    name: 'Gary',
+    privileges: ['create-server'],
+    startDate: new Date()
 }
 
-interface Named {
-  //cannot add public or private
-  readonly name?:string;
-  //optional
-  outputName?: string;
+type Combinable = string | number;
+type Numeric = number | boolean;
+
+type Universal = Combinable & Numeric;
+
+function add1(a:Combinable, b: Combinable) {
+    if(typeof a === 'string' || typeof b === 'string') {
+        return a.toString() + b.toString();
+    }
+    return a + b
 }
 
-//extended interfaces make sure that it classes and objects obtains what both interfaces requires.
-interface Greetable extends Named {
-    greet(phrase: string): void;
-}
+type UnknownEmployee = Employee | Admin;
 
-class Person implements Greetable, Named {
-    name?: string;
-
-    constructor(n?:string) {
-        if(n) {
-          this.name = n;  
-        }
-
+function printEmployeeInformation(emp: UnknownEmployee) {
+    console.log(`Name ${emp.name}`)
+    //type guard
+    if('privileges' in emp) {
+        console.log( `Privleges ${emp.privileges}`)
     }
 
-    greet(phrase: string) {
-        if(this.name) {
-            console.log(`${phrase} ${this.name}`)
-        }
-
-        else {
-            console.log('Hi!')
-        }
-   
-    }
-
+    if('startDate' in emp) {
+        console.log(`Start Date ${emp.startDate}`)
+    }  
 }
 
-let user1: Greetable;
-user1 = new Person('Gary')
+printEmployeeInformation(e1)
 
-console.log(user1.greet('Hi my name is'))
+class Car {
+    drive() {
+        console.log('Driving...')
+    }
+}
+
+class Truck {
+    drive() {
+        console.log('Driving a truck')
+    }
+
+    loadCargo(amount:number) {
+        console.log(`Loading cargo... ${amount}`)
+    }
+}
+
+type Vehicle = Car | Truck
+
+const v1 = new Car();
+const v2 = new Truck();
+
+function useVehicle(vehicle: Vehicle) {
+    vehicle.drive();
+    if (vehicle instanceof Truck) {
+      vehicle.loadCargo(1000)
+    }
+}
+
+useVehicle(v2)
